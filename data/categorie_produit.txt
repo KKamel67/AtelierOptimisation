@@ -1,0 +1,4 @@
+id	nom
+1	Macaron
+2	Tarte
+3	Autre

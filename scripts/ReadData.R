@@ -1,0 +1,5 @@
+cat_produit <- read.table(file = "./data/categorie_produit.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8")
+produit <- read.table(file = "./data/produit.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8")
+clients <- read.table(file = "./data/clients.txt", header = TRUE, sep = "\t", fileEncoding = "UTF-8")
+commande <- read.table(file = "./data/commande.csv", header = TRUE, sep = "\t", fileEncoding = "UTF-8")
+commande_produit <- read.table(file = "./data/commande_produit.csv", header = TRUE, sep = "\t", fileEncoding = "UTF-8")

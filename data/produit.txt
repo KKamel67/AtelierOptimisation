@@ -1,0 +1,26 @@
+id	nom	code	id_categorie	format	prix_unitaire
+1	Macaron citron	MACCITIND	1	1	4.5
+2	Macaron fraise	MACFRAIND	1	1	4.5
+3	Macaron chocolat	MACCHOIND	1	1	4.5
+4	Macaron fruit de la passion - chocolat au lait	MACMOGIND	1	1	6.5
+5	Macaron rose - framboise - litchi	MACISPIND	1	1	6.5
+6	Macaron pistache	MACPISIND	1	1	4.5
+7	Macaron vanille	MACVANIND	1	1	4.8
+8	Macaron réglisse	MACREGIND	1	1	4.7
+9	Macaron violette	MACVIOIND	1	1	4.8
+10	Macaron caramel	MACCARIND	1	1	4.5
+11	Tarte au citron meringuée	TARCITMERFAM	2	6	50
+12	Saint-Honoré	SAINTHONFAM	3	8	60
+13	Forêt Noire	FORNOIFAM	3	8	62
+14	Tarte bourdaloue	TARBOUFAM	2	6	55
+15	Infiniment vanille	INFVANFAM	2	6	57
+16	Macaron citron	MACCITFAM	1	6	60
+17	Macaron fraise	MACFRAFAM	1	6	60
+18	Macaron chocolat	MACCHOFAM	1	6	60
+19	Macaron fruit de la passion - chocolat au lait	MACMOGFAM	1	6	65
+20	Macaron rose - framboise - litchi	MACISPFAM	1	6	65
+21	Macaron pistache	MACPISFAM	1	6	60
+22	Macaron vanille	MACVANFAM	1	6	63
+23	Macaron réglisse	MACREGFAM	1	6	62
+24	Macaron violette	MACVIOFAM	1	6	63
+25	Macaron caramel	MACCARFAM	1	6	60
