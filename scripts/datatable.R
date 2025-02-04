@@ -1,3 +1,5 @@
+library(data.table)
+
 dt_commande <- as.data.table(commande)
 commande_fois10 <- do.call("rbind",lapply(1:10, function(x) commande))
 dt_commande_fois10 <- as.data.table(commande_fois10)
