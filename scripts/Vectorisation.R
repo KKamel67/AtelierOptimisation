@@ -45,3 +45,35 @@ f2_parcours <- function(df) {
 
 microbenchmark(f1_parcours(employees), times = 10)
 microbenchmark(f2_parcours(employees), times = 10)
+
+
+
+# Création d'une liste de 10 data frame de 50 lignes (A exécuter une seule fois)
+lst_df <- list()
+for (i in seq(10)) {
+  lst_df[[i]] <- data.frame("id" = rep(Sys.time(),50000), "rd_letter" = sample(letters,size = 50, replace = TRUE))
+  Sys.sleep(1)
+}
+
+
+f1_concat <- function(l){
+
+  df_concat <- data.frame("id" = lubridate::POSIXct(0), "rd_letter" = character(0))
+
+  for (i in seq(length(l))){
+    df_concat <- rbind(df_concat,l[[i]])
+  }
+
+  return(df_concat)
+}
+
+
+
+f2_concat <- function(l){
+
+  return(do.call("rbind", l))
+}
+
+microbenchmark(f1_concat(lst_df), times = 1000, unit = "milliseconds")
+microbenchmark(f2_concat(lst_df), times = 1000, unit = "milliseconds")
+
