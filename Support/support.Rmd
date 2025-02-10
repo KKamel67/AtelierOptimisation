@@ -1,0 +1,487 @@
+---
+title: "Optimisation de scripts"
+author: "Kamel Kemiha"
+date: "02/2025"
+output:
+  ioslides_presentation:
+    logo: logo_consortia.jfif
+    widescreen: true
+    css: styles.css
+    transition: 1.5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Sommaire
+
+1. <div class="red">Généralités</div>
+
+
+## Généralités | Questions
+
+1. Pourquoi optimiser ?
+2. Comment mesurer la performance d'un script ?
+3. Comment détecter les goulots d'étranglement ?
+4. Jusqu'où aller ?
+5. Quels sont les scripts les plus difficiles à optimiser ?
+
+
+## Généralités | Pourquoi optimiser ?
+
+  <ul>
+    <li>Augmenter le nombre de tests (développeur)</li>
+    <li>Travailler de manière plus sereine (développeur)</li>
+    <li>Avoir une application agréable à utiliser (utilisateur)</li>
+    <li>Etre capable de gérer les urgences (utilisateur)</li>
+    <li>L'usure du matériel (environnement)</li>
+    <li>L'empreinte écologique (environnement)</li>
+  </ul>
+  
+  <div class="red">Bien garder en tête les inconvénients d'un script lent</div>
+
+## Généralités | Comment mesurer la performance d'un script ?
+
+  <ul>
+    <li>Le package *microbenchmark*</li>
+    <li>*Sys.time()* avant et après</li>
+  </ul>
+
+
+## Généralités | Comment identifier les goulots d'étranglement ?
+
+  <ul>
+    <li>Baliser le script par des *Sys.time()* en utilisant la dichotomie</li>
+    <li>La fonction *Rprof*</li>
+    <li>Le package *profvis*</li>
+  </ul>
+  
+  <div class="red">La partie la plus lente à s'exécuter n'est pas forcément la partie où il y a des leviers d'action</div>
+
+
+## Généralités | Jusqu'où aller ?
+  
+  <ul>
+    <li>Le bénéfice par rapport au temps de travail demandé</li>
+    <li>Ne pas sacrifier la lisibilité de votre script au profit de la performance</li>
+    <li>Dépend de la criticité du projet, du secteur d'activité, ...</li>
+  </ul>
+  
+  
+  Liens utiles :
+  
+  + https://stackify.com/premature-optimization-evil/
+
+
+## Généralités | Quels sont les scripts les plus difficiles à optimiser ?
+  
+  <ul>
+    <li>Un script hérité où il n'y a pas de recette personnelle (lecture de données, modèle statistique)</li>
+    <li>Un script qui tourne en **0.5s** et qui pourrait tourner en **0.1s**</li>
+  </ul>
+
+
+## Sommaire
+
+1. Généralités
+2. <div class="red">Données</div>
+
+## Données
+
+Dans le e-commerce, a minima, les données sont constituées :
+
+1. d'une table de produits (**/data/produit.txt**)
+2. d'une table des clients (**/data/clients.txt**)
+3. d'une table des commandes (**/data/commande.csv**)
+4. d'une table des détails des commandes (**/data/commande_produit.csv**)
+
+## Sommaire
+
+1. Généralités
+2. Données
+3. <div class="red">Les opérations inutiles et répétées</div>
+
+
+## Les opérations inutiles et répétées | Opérations inutiles
+
+Une opération inutile est une opération qui ne fait pas avancer vers la destination. On ne gagne rien à effectuer cette opération. On peut penser à un Paris-Marseille en passant par Lorient, Antananarivo ou Sfax. 
+
+
+## Les opérations inutiles et répétées | Opérations répétées
+
+Une opération répétée est une opération que l'on exécute plusieurs fois alors que la quantité calculée est la même. Dans ce cas, il est plus avantageux de la calculer une seule fois et de la sauvegarder dans une variable qu'on viendra utiliser le moment venu. D'une certaine manière, une opération répétée (à partir de la deuxième fois) est une opération inutile.
+
+
+## Sommaire
+
+1. Généralités
+2. Données
+3. Les opérations inutiles et répétées
+4. <div class="red">Le package data.table</div>
+
+## Le package data.table
+
+**data.table** est un package R permettant de manipuler de grosses volumétries avec de très bonnes performances.
+
+**Description du package** : *Fast aggregation of large data (e.g. 100GB in RAM), fast ordered joins, fast add/modify/delete of columns by group using no copies at all, list columns, friendly and fast character-separated-value read/write. Offers a natural and flexible syntax, for faster development.*
+
+Liens utiles :
+
++ https://www.datacamp.com/cheat-sheet/the-datatable-r-package-cheat-sheet
++ Une recherche Google avec le mot-clé **cheat sheet data.table R** devrait faire votre bonheur
++ En Python : https://datatable.readthedocs.io/en/v0.10.1/
+
+
+## Sommaire
+
+1. Généralités
+2. Données
+3. Les opérations inutiles et répétées
+4. Le package data.table
+5. <div class="red">La vectorisation</div>
+
+## La vectorisation
+
+La vectorisation est une technique qui permet d'avoir à éviter les boucles. Il est souvent possible d'éviter une boucle en utilisant des commandes spécifiques. Il faut éviter au maximum d'avoir à chercher les éléments les uns après les autres.
+
+Exemples d'utilisation :
+
+<ul>
+  <li>Créer une nouvelle variable dans un tableau</li>
+  <li>Détecter les éléments présents dans 2 ensembles</li>
+  <li>Concaténer une liste de data frame</li>
+</ul>
+
+
+Liens utiles : 
+
++ [Vectorisation en R](https://thinkr.fr/abcdr/vectoriser_des_operations_pour_ameliorer_la_performance/#:~:text=La%20vectorisation%20est%20une%20technique,beaucoup%20plus%20rapide%20et%20efficace.)
+
+
+## Sommaire
+
+1. Généralités
+2. Données
+3. Les opérations inutiles et répétées
+4. Le package data.table
+5. La vectorisation
+6. <div class="red">L'ordre des opérations</div>
+
+
+## L'ordre des opérations
+
+L'ordre des opérations est un puissant levier d'optimisation. Pour cela, on peut dessiner le logigramme de manière macro pour avoir une vision d'ensemble. Ensuite, on peut chiffrer le temps d'exécution de chacune des briques du programme. Un ordre de grandeur suffira dans un premier temps. Après analyse, il sera possible de comprendre si le logigramme est optimal ou non. S'il l'est, il faudra alors trouver d'autres moyens d'optimisation.
+
+Exemples d'utilisation :
+
+<ul>
+  <li>Jointure/filtre ou filtre/jointure</li>
+  <li>Filtre/agrégation ou agrégation/filtre</li>
+</ul>
+
+## Sommaire
+
+1. Généralités
+2. Données
+3. Les opérations inutiles et répétées
+4. Le package data.table
+5. La vectorisation
+6. L'ordre des opérations
+7. <div class="red">Les métadonnées</div>
+
+
+## Les métadonnées
+
+L'ordre des opérations est un puissant levier d'optimisation. Pour cela, on peut dessiner le logigramme de manière macro pour avoir une vision d'ensemble. Ensuite, on peut chiffrer le temps d'exécution de chacune des briques du programme. Un ordre de grandeur suffira dans un premier temps. Après analyse, il sera possible de comprendre si le logigramme est optimal ou non. S'il l'est, il faudra alors trouver d'autres moyens d'optimisation.
+
+Exemples d'utilisation :
+
+<ul>
+  <li>Une date de création/modification d'un fichier</li>
+  <li>Les logs du script</li>
+  <li>Les données que l'on peut trouver en base</li>
+  <li>La clé SHA d'un fichier</li>
+</ul>
+
+
+## Optimisation | Périmètre des données
+
+Il faut limiter au maximum les données à lire et à écrire. Dans l'idéal, on n'utilisera pas le symbole *, on ne prendra que les colonnes nécessaires. De la même manière, on filtrera nos lignes au maximum. Le typage entre en jeu ici.
+
+**Cas pratique** : on veut envoyer un e-mail à toutes les personnes de la BDD contactables en le personnalisant.
+
+
+## Optimisation | Ordre des opérations
+
+Bien comprendre ses données (structure, volumétrie, ...) est indispensable pour tracer le chemin le plus direct possible pour aller vers le résultat escompté.
+
+**Cas pratique** : pour un client donné, extraire la liste de ses commandes.
+
+
+## Optimisation | Les index
+
+Nous l'avons vu plus haut, les index peuvent être très puissants lorsqu'ils sont bien utilisés. Il faut veiller à accorder la stratégie d'indexation et la stratégie de requêtage.
+
+
+## Optimisation | La commande EXPLAIN
+
+La commande EXPLAIN de MySQL est pratique pour analyser le plan d'exécution de la requête et comprendre où se situent les éventuels goulots d'étranglement.
+
++ https://dev.mysql.com/doc/refman/8.0/en/explain-output.html
+
+
+
+
+
+## Sommaire
+
+1. Données et création de tables
+2. Contraintes, clés et index
+3. Modèle conceptuel de données
+4. Optimisation
+5. <div class="red">Fonctions window</div>
+6. Tables CTE
+7. Vues
+8. Procédures stockées
+9. Trigger
+10. Pour aller plus loin
+
+
+## Fonctions window | Principe
+
+*Une fonction window est une fonction qui permet d'exécuter des fonctions d'agrégation sur un ensemble de lignes (une partition) sans agréger ces lignes.*
+
+
+## Fonctions window | Cas d'usage
+
+Une fonction window est pratique lorsque l'on cherche à faire un classement au sein d'une partition ou encore à numéroter une ligne suivant un critère. 
+
+**Cas pratique** : on cherche à numéroter les commandes par jour et par id_client. Dans la table résultat, on veut donc 2 nouvelles colonnes :
+
+1. Pour chaque client, classer les commandes de la plus ancienne à la plus récente (colonne Num_cmd_client)
+2. Pour chaque jour, classer les commandes du montant le plus élevé au montant le moins élevé (colonne Num_cmd_day)
+
+
+## Fonctions window | Liens utiles
+
++ https://dev.mysql.com/doc/refman/8.0/en/window-functions-usage.html
++ https://datajourney.io/les-fonctions-de-fenetrage-en-sql.html
+
+
+
+
+
+## Sommaire
+
+1. Données et création de tables
+2. Contraintes, clés et index
+3. Modèle conceptuel de données
+4. Optimisation
+5. Fonctions window
+6. <div class="red">Tables CTE</div>
+7. Vues
+8. Procédures stockées
+9. Trigger
+10. Pour aller plus loin
+
+
+## Tables CTE | Principe
+
+*Une table CTE (Common Table Expression) a pour objectif de simplifier l'écriture et donc la compréhension des requêtes.*
+
+Les tables CTE sont temporaires et locales.
+
+&rarr; Elles ne sont donc pas accessibles aux autres utilisateurs
+
+&rarr; Elles doivent être utilisées immédiatement après leur définition
+
+
+## Tables CTE | Cas d'usage
+
+Les tables CTE sont très pratiques lorsque l'on veut simplifier des requêtes imbriquées et complexes. Une table CTE est créée en utilisant l'instruction WITH.
+
+**Cas pratique** : on cherche à extraire les commandes des clients strasbourgeois (67000).
+
+
+## Tables CTE | Liens utiles
+
++ https://dev.mysql.com/doc/refman/8.0/en/with.html
+
+
+
+
+
+## Sommaire
+
+1. Données et création de tables
+2. Contraintes, clés et index
+3. Modèle conceptuel de données
+4. Optimisation
+5. Fonctions window
+6. Tables CTE
+7. <div class="red">Vues</div>
+8. Procédures stockées
+9. Trigger
+10. Pour aller plus loin
+
+
+## Vues | Principe
+
+*Une vue est une table virtuelle, c'est-à-dire un objet ayant la même utilisation qu'une table. Une vue n'occupe pas d'espace disque pour les données. Seule la requête correspondant à l'extraction est stockée.*
+
+
+## Vues | Avantages
+
+1. Simplification des structures des tables (sélection de colonnes,  restriction sur les lignes)
+2. Réutilisation des requêtes
+3. Sécurité d'accès
+4. Non-redondance de la donnée
+
+
+## Vues | Cas d'usage
+
+Dans nos métiers, on peut connecter un outil de visualisation à une vue et non à une table physique. On peut aussi faciliter l'accès à l'information aux utilisateurs non-techniques grâce à une vue. La logique sera masquée dans la requête et l'utilisateur verra directement son résultat.
+
+**Cas pratique** : nos pâtissiers ont créé un nouveau macaron. Pour faire connaître le produit, l'équipe marketing veut envoyer un e-mail aux personnes qui ont acheté au moins un macaron sur les 12 derniers mois de l'historique de commandes. L'e-mail sera personnalisé avec un objet "Bonjour, Civilité Nom Prénom". Bien entendu, l'équipe marketing ne veut contacter que des personnes qui veulent recevoir nos communications commerciales.
+
+
+## Vues | Liens utiles
+
++ https://dev.mysql.com/doc/refman/8.0/en/create-view.html
++ https://apprendre-php.com/tutoriels/tutoriel-28-mysql-5-0-les-vues.html
+
+
+
+
+
+## Sommaire
+
+1. Données et création de tables
+2. Contraintes, clés et index
+3. Modèle conceptuel de données
+4. Optimisation
+5. Fonctions window
+6. Tables CTE
+7. Vues
+8. <div class="red">Procédures stockées</div>
+9. Trigger
+10. Pour aller plus loin
+
+
+## Procédures stockées | Principe
+
+*Une procédure stockée est un object correspondant à un ensemble d'instructions. Elle peut être exécutée par un appel avec le mot-clé CALL (en MySQL). Elle peut recevoir des paramètres et renvoyer des valeurs.*
+
+
+## Procédures stockées | Avantages
+
+1. Enchaînement d'instructions
+2. Mise en oeuvre d'une logique
+3. Sécurité d'exécution
+
+
+## Procédures stockées | Cas d'usage
+
+Dans nos métiers, on peut manipuler des données sur différentes mailles et provenant de différentes sources. Pour pouvoir comparer ces données, il faut se mettre sur la même échelle. Une procédure stockée peut faire ce travail en faisant les agrégations voulues et en centralisant les données dans une seule table finale. (une segmentation client, un scoring prospect,...)
+
+
+## Procédures stockées | Cas d'usage
+
+**Cas pratique** : 
+
+1. Extraire la liste des clients ayant fait au moins un achat sur les N derniers jours 
+2. Agréger les données de commande à la maille jour pour avoir le nombre de commandes et le montant de ces commandes. Ecrire ces données dans une table
+
+
+## Procédures stockées | Liens utiles
+
+1. https://dev.mysql.com/doc/refman/8.0/en/create-procedure.html
+2. https://www.mysqltutorial.org/stored-procedures-parameters.aspx
+3. https://lucidar.me/fr/web-dev/levenshtein-distance-in-mysql/ (FUNCTION)
+4. https://www.dotnettricks.com/learn/sqlserver/difference-between-stored-procedure-and-function-in-sql-server
+
+
+
+
+
+## Sommaire
+
+1. Données et création de tables
+2. Contraintes, clés et index
+3. Modèle conceptuel de données
+4. Optimisation
+5. Fonctions window
+6. Tables CTE
+7. Vues
+8. Procédures stockées
+9. <div class="red">Trigger</div>
+10. Pour aller plus loin
+
+
+## Trigger | Principe
+
+*Un trigger, également appelé déclencheur, permet d’exécuter un ensemble d’instructions SQL juste après un événement. Cela permet de faciliter et d’automatiser des actions au sein d’un SGBDR.*
+
+
+## Trigger | Cas d'usage
+
+Dans le e-commerce, on peut par exemple penser à la gestion des stocks. Une personne commande un produit A, alors on a dans notre stock un produit A en moins dans les stocks. On peut aussi penser à un système de réservation de billets (train, cinéma,...). Une place réservée est une place en moins de disponible. 
+
+**Cas pratique** : on reçoit la liste des désabonnés de nos campagnes commerciales dans un fichier externe. A chaque nouvelle entrée dans cette table, on veut faire passer la colonne *est_contactable* à 0.
+
+
+## Trigger | Liens utiles
+
++ https://dev.mysql.com/doc/refman/8.0/en/trigger-syntax.html
++ https://sql.sh/cours/create-trigger
+
+
+
+
+
+## Sommaire
+
+1. Données et création de tables
+2. Contraintes, clés et index
+3. Modèle conceptuel de données
+4. Optimisation
+5. Fonctions window
+6. Tables CTE
+7. Vues
+8. Procédures stockées
+9. Trigger
+10. <div class="red">Pour aller plus loin</div>
+
+
+## Pour aller plus loin | Lazy evaluation
+
+Ne calculer que le strict nécessaire. Penser à une double condition avec un && ou un ||. Ne marche pas avec un & ou |.
+
+Quand on évalue une double condition avec un **&&**, il faut essayer de mettre en **première position** la condition avec le **moins** de chance de se réaliser. Si la première condition est **fausse**, la deuxième condition ne sera pas calculée.
+
+Quand on évalue une double condition avec un **||**, il faut essayer de mettre en **première position** la condition avec le **plus** de chance de se réaliser. Si la première condition est **vraie**, la deuxième condition ne sera pas calculée.
+
+
+## Pour aller plus loin | Le package Rcpp
+
+Ecrire du code C++ dans R.
+
+## Pour aller plus loin | Le cloud
+
+Louer des machines sur le cloud et y exécuter des scripts.
+
+## Pour aller plus loin | Le matériel
+
+Acheter du matériel plus puissant, mais aussi plus cher.
+
+
+
+## Outils
+
++ R (https://cran.r-project.org/bin/windows/base/old/4.1.0/)
++ RStudio (https://posit.co/download/rstudio-desktop/)
++ Notepad++ (https://notepad-plus-plus.org/downloads/)
+
+
