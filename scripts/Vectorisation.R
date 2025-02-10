@@ -9,8 +9,8 @@ noms <- sapply(full_names_splitted, "[[", 2)
 employees <- data.frame("prenom" = prenoms, "nom" = noms)
 
 
-# Parcours
-f1_parcours <- function(df) {
+# Enrichissement
+f1_enrich <- function(df) {
 
   df$quadrigram <- NA
   df$email <- NA
@@ -34,7 +34,7 @@ compute_rh_elements <- function(nom, prenom) {
          )
 }
 
-f2_parcours <- function(df) {
+f2_enrich <- function(df) {
 
   rh_elements <- compute_rh_elements(nom = df$nom, prenom = df$prenom)
   df$quadrigram <- rh_elements[["quadrigram"]]
@@ -43,10 +43,12 @@ f2_parcours <- function(df) {
   return(df)
 }
 
-microbenchmark(f1_parcours(employees), times = 10)
-microbenchmark(f2_parcours(employees), times = 10)
+microbenchmark(f1_enrich(employees), times = 10)
+microbenchmark(f2_enrich(employees), times = 10)
 
-
+print(Sys.time())
+rr = f1_enrich(employees)
+print(Sys.time())
 
 # Création d'une liste de 10 data frame de 50 lignes (A exécuter une seule fois)
 lst_df <- list()
@@ -56,6 +58,7 @@ for (i in seq(10)) {
 }
 
 
+# Concat
 f1_concat <- function(l){
 
   df_concat <- data.frame("id" = lubridate::POSIXct(0), "rd_letter" = character(0))
@@ -76,4 +79,32 @@ f2_concat <- function(l){
 
 microbenchmark(f1_concat(lst_df), times = 1000, unit = "milliseconds")
 microbenchmark(f2_concat(lst_df), times = 1000, unit = "milliseconds")
+
+
+
+
+## Reduce
+f1_cbind <- function(l){
+
+  df_concat <- l[[1]]
+
+  for (i in seq(2,length(l))){
+    df_concat <- cbind(df_concat,l[[i]])
+  }
+
+  return(df_concat)
+}
+
+
+
+f2_cbind <- function(l){
+
+  return(Reduce(f = "cbind", x = lst_df))
+}
+
+
+microbenchmark(f1_cbind(lst_df), times = 10000, unit = "milliseconds")
+microbenchmark(f2_cbind(lst_df), times = 10000, unit = "milliseconds")
+
+# rowSums, colSums, setdiff, intersect, ....
 
