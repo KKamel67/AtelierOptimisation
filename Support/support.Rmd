@@ -3,9 +3,11 @@ title: "Optimisation de scripts"
 author: "Kamel Kemiha"
 date: "02/2025"
 output:
+  beamer_presentation: default
+  slidy_presentation: default
   ioslides_presentation:
     logo: logo_consortia.jfif
-    widescreen: true
+    widescreen: yes
     css: styles.css
     transition: 1.5
 ---
@@ -194,12 +196,12 @@ Exemples d'utilisation :
 
 ## Les métadonnées
 
-L'ordre des opérations est un puissant levier d'optimisation. Pour cela, on peut dessiner le logigramme de manière macro pour avoir une vision d'ensemble. Ensuite, on peut chiffrer le temps d'exécution de chacune des briques du programme. Un ordre de grandeur suffira dans un premier temps. Après analyse, il sera possible de comprendre si le logigramme est optimal ou non. S'il l'est, il faudra alors trouver d'autres moyens d'optimisation.
+*Une métadonnée est une donnée qui fournit de l'information sur une autre donnée.*(https://www.priv.gc.ca/media/2347/md_info_201410_f.pdf) Elles ne font pas partie du problème à traiter mais font partie des données qu'il est possible d'exploiter. Il faut essayer de s'appuyer dessus autant que possible. Il est très souvent possible de la créer si elle n'existe pas.
 
-Exemples d'utilisation :
+Exemples de métadonnées :
 
 <ul>
-  <li>Une date de création/modification d'un fichier</li>
+  <li>Une date/heure d'insertion d'une ligne dans une table</li>
   <li>Les logs du script</li>
   <li>Les données que l'on peut trouver en base</li>
   <li>La clé SHA d'un fichier</li>
