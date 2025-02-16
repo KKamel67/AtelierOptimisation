@@ -3,13 +3,13 @@ title: "Optimisation de scripts"
 author: "Kamel Kemiha"
 date: "02/2025"
 output:
-  beamer_presentation: default
-  slidy_presentation: default
   ioslides_presentation:
     logo: logo_consortia.jfif
     widescreen: yes
     css: styles.css
     transition: 1.5
+  slidy_presentation: default
+  beamer_presentation: default
 ---
 
 ```{r setup, include=FALSE}
@@ -24,12 +24,20 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Généralités | Questions
 
-1. Pourquoi optimiser ?
-2. Comment mesurer la performance d'un script ?
-3. Comment détecter les goulots d'étranglement ?
-4. Jusqu'où aller ?
-5. Quels sont les scripts les plus difficiles à optimiser ?
+1. Pourquoi R est lent ?
+2. Pourquoi optimiser ?
+3. Comment mesurer la performance d'un script ?
+4. Comment détecter les goulots d'étranglement ?
+5. Jusqu'où aller ?
+6. Quels sont les scripts les plus difficiles à optimiser ?
 
+## Généralités | Pourquoi R est lent ?
+
+Il existe 2 types de langage. Les langages compilés et les langages interprétés. R fait partie de la famille des langages interprétés. Comme Python. Cela signifie que le code est exécuté ligne par ligne en temps réel. Pour un langage compilé, on doit passer par une étape de compilation pour le transformer en un langage de bas niveau compréhensible uniquement par la machine. La proximité avec la mémoire fait que les langages compilés sont, en général, plus rapides que les langages interprétés.
+
+Liens utiles :
+
++ https://laconsole.dev/blog/differences-langage-compile-interprete/
 
 ## Généralités | Pourquoi optimiser ?
 
@@ -142,7 +150,21 @@ Liens utiles :
 2. Données
 3. Les opérations inutiles et répétées
 4. Le package data.table
-5. <div class="red">La vectorisation</div>
+5. <div class="red">Dans une application shiny</div>
+
+## Dans une application shiny
+
+**DEMONSTRATION**
+
+
+## Sommaire
+
+1. Généralités
+2. Données
+3. Les opérations inutiles et répétées
+4. Le package data.table
+5. Dans une application shiny
+6. <div class="red">La vectorisation</div>
 
 ## La vectorisation
 
@@ -168,8 +190,9 @@ Liens utiles :
 2. Données
 3. Les opérations inutiles et répétées
 4. Le package data.table
-5. La vectorisation
-6. <div class="red">L'ordre des opérations</div>
+5. Dans une application shiny
+6. La vectorisation
+7. <div class="red">L'ordre des opérations</div>
 
 
 ## L'ordre des opérations
@@ -183,20 +206,24 @@ Exemples d'utilisation :
   <li>Filtre/agrégation ou agrégation/filtre</li>
 </ul>
 
+
 ## Sommaire
 
 1. Généralités
 2. Données
 3. Les opérations inutiles et répétées
 4. Le package data.table
-5. La vectorisation
-6. L'ordre des opérations
-7. <div class="red">Les métadonnées</div>
+5. Dans une application shiny
+6. La vectorisation
+7. L'ordre des opérations
+8. <div class="red">Les métadonnées</div>
 
 
 ## Les métadonnées
 
-*Une métadonnée est une donnée qui fournit de l'information sur une autre donnée.*(https://www.priv.gc.ca/media/2347/md_info_201410_f.pdf) Elles ne font pas partie du problème à traiter mais font partie des données qu'il est possible d'exploiter. Il faut essayer de s'appuyer dessus autant que possible. Il est très souvent possible de la créer si elle n'existe pas.
+*Une métadonnée est une donnée qui fournit de l'information sur une autre donnée.*(https://www.priv.gc.ca/media/2347/md_info_201410_f.pdf)
+
+Elles ne font pas directement partie du problème à traiter mais font partie des données qu'il est possible d'exploiter. Il faut essayer de s'appuyer dessus autant que possible. Il est très souvent possible de la créer si elle n'existe pas.
 
 Exemples de métadonnées :
 
@@ -208,252 +235,44 @@ Exemples de métadonnées :
 </ul>
 
 
-## Optimisation | Périmètre des données
+## Sommaire
 
-Il faut limiter au maximum les données à lire et à écrire. Dans l'idéal, on n'utilisera pas le symbole *, on ne prendra que les colonnes nécessaires. De la même manière, on filtrera nos lignes au maximum. Le typage entre en jeu ici.
-
-**Cas pratique** : on veut envoyer un e-mail à toutes les personnes de la BDD contactables en le personnalisant.
-
-
-## Optimisation | Ordre des opérations
-
-Bien comprendre ses données (structure, volumétrie, ...) est indispensable pour tracer le chemin le plus direct possible pour aller vers le résultat escompté.
-
-**Cas pratique** : pour un client donné, extraire la liste de ses commandes.
-
-
-## Optimisation | Les index
-
-Nous l'avons vu plus haut, les index peuvent être très puissants lorsqu'ils sont bien utilisés. Il faut veiller à accorder la stratégie d'indexation et la stratégie de requêtage.
+1. Généralités
+2. Données
+3. Les opérations inutiles et répétées
+4. Le package data.table
+5. Dans une application shiny
+6. La vectorisation
+7. L'ordre des opérations
+8. Les métadonnées
+9. <div class="red">La parallélisation</div>
 
 
-## Optimisation | La commande EXPLAIN
+## La parallélisation
 
-La commande EXPLAIN de MySQL est pratique pour analyser le plan d'exécution de la requête et comprendre où se situent les éventuels goulots d'étranglement.
+La parallélisation consiste à diviser une tâche en sous-tâches et à les traiter sur des unités (clusters, workers, processeurs) indépendantes et traitées simultanément. Sans parallélisation, les tâches sont traitées de manière séquentielle, i.e. l'une après l'autre. Grâce à la parallélisation, on peut lancer plusieurs tâches en même temps.
 
-+ https://dev.mysql.com/doc/refman/8.0/en/explain-output.html
+<div class="red">Cette technique est puissante. Mais elle doit être utilisée de manière prudente. Il existe des risques comme le MemoryError.</div>\
 
 
 
+Liens utiles :
+
++ [Quelques généralités](https://www.purestorage.com/fr/knowledge/what-is-data-parallelism.html)
++ [Parallélisation avec R](https://stt4230.rbind.io/autre_materiel/calcul_parallele_r_2017.pdf)
 
 
 ## Sommaire
 
-1. Données et création de tables
-2. Contraintes, clés et index
-3. Modèle conceptuel de données
-4. Optimisation
-5. <div class="red">Fonctions window</div>
-6. Tables CTE
-7. Vues
-8. Procédures stockées
-9. Trigger
-10. Pour aller plus loin
-
-
-## Fonctions window | Principe
-
-*Une fonction window est une fonction qui permet d'exécuter des fonctions d'agrégation sur un ensemble de lignes (une partition) sans agréger ces lignes.*
-
-
-## Fonctions window | Cas d'usage
-
-Une fonction window est pratique lorsque l'on cherche à faire un classement au sein d'une partition ou encore à numéroter une ligne suivant un critère. 
-
-**Cas pratique** : on cherche à numéroter les commandes par jour et par id_client. Dans la table résultat, on veut donc 2 nouvelles colonnes :
-
-1. Pour chaque client, classer les commandes de la plus ancienne à la plus récente (colonne Num_cmd_client)
-2. Pour chaque jour, classer les commandes du montant le plus élevé au montant le moins élevé (colonne Num_cmd_day)
-
-
-## Fonctions window | Liens utiles
-
-+ https://dev.mysql.com/doc/refman/8.0/en/window-functions-usage.html
-+ https://datajourney.io/les-fonctions-de-fenetrage-en-sql.html
-
-
-
-
-
-## Sommaire
-
-1. Données et création de tables
-2. Contraintes, clés et index
-3. Modèle conceptuel de données
-4. Optimisation
-5. Fonctions window
-6. <div class="red">Tables CTE</div>
-7. Vues
-8. Procédures stockées
-9. Trigger
-10. Pour aller plus loin
-
-
-## Tables CTE | Principe
-
-*Une table CTE (Common Table Expression) a pour objectif de simplifier l'écriture et donc la compréhension des requêtes.*
-
-Les tables CTE sont temporaires et locales.
-
-&rarr; Elles ne sont donc pas accessibles aux autres utilisateurs
-
-&rarr; Elles doivent être utilisées immédiatement après leur définition
-
-
-## Tables CTE | Cas d'usage
-
-Les tables CTE sont très pratiques lorsque l'on veut simplifier des requêtes imbriquées et complexes. Une table CTE est créée en utilisant l'instruction WITH.
-
-**Cas pratique** : on cherche à extraire les commandes des clients strasbourgeois (67000).
-
-
-## Tables CTE | Liens utiles
-
-+ https://dev.mysql.com/doc/refman/8.0/en/with.html
-
-
-
-
-
-## Sommaire
-
-1. Données et création de tables
-2. Contraintes, clés et index
-3. Modèle conceptuel de données
-4. Optimisation
-5. Fonctions window
-6. Tables CTE
-7. <div class="red">Vues</div>
-8. Procédures stockées
-9. Trigger
-10. Pour aller plus loin
-
-
-## Vues | Principe
-
-*Une vue est une table virtuelle, c'est-à-dire un objet ayant la même utilisation qu'une table. Une vue n'occupe pas d'espace disque pour les données. Seule la requête correspondant à l'extraction est stockée.*
-
-
-## Vues | Avantages
-
-1. Simplification des structures des tables (sélection de colonnes,  restriction sur les lignes)
-2. Réutilisation des requêtes
-3. Sécurité d'accès
-4. Non-redondance de la donnée
-
-
-## Vues | Cas d'usage
-
-Dans nos métiers, on peut connecter un outil de visualisation à une vue et non à une table physique. On peut aussi faciliter l'accès à l'information aux utilisateurs non-techniques grâce à une vue. La logique sera masquée dans la requête et l'utilisateur verra directement son résultat.
-
-**Cas pratique** : nos pâtissiers ont créé un nouveau macaron. Pour faire connaître le produit, l'équipe marketing veut envoyer un e-mail aux personnes qui ont acheté au moins un macaron sur les 12 derniers mois de l'historique de commandes. L'e-mail sera personnalisé avec un objet "Bonjour, Civilité Nom Prénom". Bien entendu, l'équipe marketing ne veut contacter que des personnes qui veulent recevoir nos communications commerciales.
-
-
-## Vues | Liens utiles
-
-+ https://dev.mysql.com/doc/refman/8.0/en/create-view.html
-+ https://apprendre-php.com/tutoriels/tutoriel-28-mysql-5-0-les-vues.html
-
-
-
-
-
-## Sommaire
-
-1. Données et création de tables
-2. Contraintes, clés et index
-3. Modèle conceptuel de données
-4. Optimisation
-5. Fonctions window
-6. Tables CTE
-7. Vues
-8. <div class="red">Procédures stockées</div>
-9. Trigger
-10. Pour aller plus loin
-
-
-## Procédures stockées | Principe
-
-*Une procédure stockée est un object correspondant à un ensemble d'instructions. Elle peut être exécutée par un appel avec le mot-clé CALL (en MySQL). Elle peut recevoir des paramètres et renvoyer des valeurs.*
-
-
-## Procédures stockées | Avantages
-
-1. Enchaînement d'instructions
-2. Mise en oeuvre d'une logique
-3. Sécurité d'exécution
-
-
-## Procédures stockées | Cas d'usage
-
-Dans nos métiers, on peut manipuler des données sur différentes mailles et provenant de différentes sources. Pour pouvoir comparer ces données, il faut se mettre sur la même échelle. Une procédure stockée peut faire ce travail en faisant les agrégations voulues et en centralisant les données dans une seule table finale. (une segmentation client, un scoring prospect,...)
-
-
-## Procédures stockées | Cas d'usage
-
-**Cas pratique** : 
-
-1. Extraire la liste des clients ayant fait au moins un achat sur les N derniers jours 
-2. Agréger les données de commande à la maille jour pour avoir le nombre de commandes et le montant de ces commandes. Ecrire ces données dans une table
-
-
-## Procédures stockées | Liens utiles
-
-1. https://dev.mysql.com/doc/refman/8.0/en/create-procedure.html
-2. https://www.mysqltutorial.org/stored-procedures-parameters.aspx
-3. https://lucidar.me/fr/web-dev/levenshtein-distance-in-mysql/ (FUNCTION)
-4. https://www.dotnettricks.com/learn/sqlserver/difference-between-stored-procedure-and-function-in-sql-server
-
-
-
-
-
-## Sommaire
-
-1. Données et création de tables
-2. Contraintes, clés et index
-3. Modèle conceptuel de données
-4. Optimisation
-5. Fonctions window
-6. Tables CTE
-7. Vues
-8. Procédures stockées
-9. <div class="red">Trigger</div>
-10. Pour aller plus loin
-
-
-## Trigger | Principe
-
-*Un trigger, également appelé déclencheur, permet d’exécuter un ensemble d’instructions SQL juste après un événement. Cela permet de faciliter et d’automatiser des actions au sein d’un SGBDR.*
-
-
-## Trigger | Cas d'usage
-
-Dans le e-commerce, on peut par exemple penser à la gestion des stocks. Une personne commande un produit A, alors on a dans notre stock un produit A en moins dans les stocks. On peut aussi penser à un système de réservation de billets (train, cinéma,...). Une place réservée est une place en moins de disponible. 
-
-**Cas pratique** : on reçoit la liste des désabonnés de nos campagnes commerciales dans un fichier externe. A chaque nouvelle entrée dans cette table, on veut faire passer la colonne *est_contactable* à 0.
-
-
-## Trigger | Liens utiles
-
-+ https://dev.mysql.com/doc/refman/8.0/en/trigger-syntax.html
-+ https://sql.sh/cours/create-trigger
-
-
-
-
-
-## Sommaire
-
-1. Données et création de tables
-2. Contraintes, clés et index
-3. Modèle conceptuel de données
-4. Optimisation
-5. Fonctions window
-6. Tables CTE
-7. Vues
-8. Procédures stockées
-9. Trigger
+1. Généralités
+2. Données
+3. Les opérations inutiles et répétées
+4. Le package data.table
+5. Dans une application shiny
+6. La vectorisation
+7. L'ordre des opérations
+8. Les métadonnées
+9. La parallélisation
 10. <div class="red">Pour aller plus loin</div>
 
 
@@ -468,15 +287,15 @@ Quand on évalue une double condition avec un **||**, il faut essayer de mettre 
 
 ## Pour aller plus loin | Le package Rcpp
 
-Ecrire du code C++ dans R.
+Ecrire du code C++ dans R
 
 ## Pour aller plus loin | Le cloud
 
-Louer des machines sur le cloud et y exécuter des scripts.
+Louer des machines sur le cloud et y exécuter des scripts
 
 ## Pour aller plus loin | Le matériel
 
-Acheter du matériel plus puissant, mais aussi plus cher.
+Acheter du matériel plus puissant, mais aussi plus cher
 
 
 
